@@ -1,6 +1,9 @@
 @tailwind base;
 @tailwind components;
 @layer components {
+  * {
+    @apply selection:bg-violet-200;
+  }
   .safeArea {
     @apply max-w-safeArea mx-auto;
   }
