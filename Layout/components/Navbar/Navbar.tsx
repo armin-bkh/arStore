@@ -1,6 +1,7 @@
+import { useOrientation } from "helpers/hooks/useOrientation";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useCallback, useState, useEffect } from "react";
 
 const links = [
   { id: 1, title: "home", href: "/" },
@@ -12,11 +13,16 @@ const links = [
 
 const Navbar = () => {
   const router = useRouter();
-  const [isOpen, setIsOpen] = useState(false);
+  const isLandscape = useOrientation();
+  const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  const openMenuHandler = () => {
+  useEffect(() => {
+    setIsOpen(isLandscape && false);
+  }, [isLandscape]);
+
+  const openMenuHandler = useCallback(() => {
     setIsOpen((prevIsOpen) => !prevIsOpen);
-  };
+  }, [isOpen]);
 
   return (
     <header className="px-5 py-4 shadow-sm shadow-black/20 sticky top-0 bg-white">
