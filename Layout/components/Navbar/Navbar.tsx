@@ -33,7 +33,7 @@ const Navbar = () => {
           </Link>
         </div>
         <nav
-          className={`fixed w-48 bg-slate-100 z-10 top-0 h-full transition-all md:w-auto md:static
+          className={`fixed w-48 bg-slate-100 z-50 top-0 h-full transition-all md:w-auto md:static
          md:bg-transparent md:h-auto ${isOpen ? "left-0" : "-left-full"}`}
         >
           <ul className="flex flex-col md:flex-row justify-center items-center py-4 md:py-0">
