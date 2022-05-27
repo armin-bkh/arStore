@@ -1,4 +1,4 @@
-import type { NextPage, GetServerSideProps } from "next";
+import type { GetServerSideProps } from "next";
 import styles from "styles/home.module.css";
 import Head from "next/head";
 import Link from "next/link";
@@ -6,8 +6,8 @@ import { MdOutlineDeliveryDining, MdMoreTime } from "react-icons/md";
 import { FaBoxOpen, FaShoppingCart } from "react-icons/fa";
 import Service from "components/Service/Service";
 import { getProducts } from "services/getProducts";
-import { useEffect } from "react";
 import Image from "next/image";
+import { ProductType } from "types/productTypes";
 
 const services = [
   {
@@ -40,17 +40,6 @@ const services = [
   },
 ];
 
-interface ProductType {
-  _id: string;
-  createdAt: string;
-  description: { _id: string; support: string }[];
-  discount: number;
-  image: string;
-  name: string;
-  offPrice: number;
-  price: number;
-  updatedAt: Date;
-}
 interface HomePagePropsType {
   products: ProductType[];
 }
