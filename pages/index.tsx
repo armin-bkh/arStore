@@ -1,10 +1,13 @@
-import type { NextPage } from "next";
+import type { NextPage, GetServerSideProps } from "next";
 import styles from "styles/home.module.css";
 import Head from "next/head";
 import Link from "next/link";
 import { MdOutlineDeliveryDining, MdMoreTime } from "react-icons/md";
 import { FaBoxOpen, FaShoppingCart } from "react-icons/fa";
 import Service from "components/Service/Service";
+import { getProducts } from "services/getProducts";
+import { useEffect } from "react";
+import Image from "next/image";
 
 const services = [
   {
@@ -37,7 +40,33 @@ const services = [
   },
 ];
 
-const HomePage: NextPage = () => {
+interface ProductType {
+  _id: string;
+  createdAt: string;
+  description: { _id: string; support: string }[];
+  discount: number;
+  image: string;
+  name: string;
+  offPrice: number;
+  price: number;
+  updatedAt: Date;
+}
+interface HomePagePropsType {
+  products: ProductType[];
+}
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const { data } = await getProducts();
+  return {
+    props: {
+      products: data.slice(0, 4),
+    },
+  };
+};
+
+const HomePage = (props: HomePagePropsType) => {
+  const { products } = props;
+
   return (
     <>
       <Head>
@@ -62,7 +91,7 @@ const HomePage: NextPage = () => {
             </div>
           </div>
         </section>
-        <section className="flex flex-col sm:flex-row flex-wrap justify-evenly py-10 items-center safeArea">
+        <section className="flex flex-col gap-10 sm:flex-row flex-wrap justify-evenly py-10 items-center safeArea">
           {services.map((service) => (
             <Service
               key={service.id}
@@ -71,9 +100,44 @@ const HomePage: NextPage = () => {
             />
           ))}
         </section>
+        <section className="flex flex-col sm:flex-row flex-wrap justify-center py-10 items-center safeArea">
+          {products.map((product) => (
+            <Product key={product._id} product={product} />
+          ))}
+        </section>
       </main>
     </>
   );
 };
 
 export default HomePage;
+
+interface ProductPropsType {
+  product: ProductType;
+}
+
+const Product = (props: ProductPropsType) => {
+  const { product } = props;
+
+  return (
+    <figure className="relative overflow-hidden border-b hover:shadow-lg transition cursor-pointer">
+      <div className="overflow-hidden relative w-[250px] h-[250px]">
+        <Image src={product.image} layout="fill" draggable={false} priority />
+      </div>
+      <figcaption className="p-5">
+        <p className="text-center text-xl font-bold mb-2">{product.name}</p>
+        <div className="text-gray-400 text-right text-sm">
+          {product.description.slice(0, 2).map((desc) => (
+            <p key={desc._id}>{desc.support}</p>
+          ))}
+        </div>
+        <div className="flex justify-center items-center mt-5">
+          <p>{product.offPrice} $</p>
+          <button className="rounded-full px-3 py-1 bg-rose-500 text-white ml-5">
+            Add to cart
+          </button>
+        </div>
+      </figcaption>
+    </figure>
+  );
+};
