@@ -105,6 +105,17 @@ const HomePage = (props: HomePagePropsType) => {
             <Product key={product._id} product={product} />
           ))}
         </section>
+        <section className="text-white bg-violet-400 text-center font-bold py-10 mb-10 px-5">
+          <p className="text-3xl xl:text-5xl mb-2">Please join us</p>
+          <p className="text-xl xl:text-3xl mb-10">
+            and take advantage of our good facilities.
+          </p>
+          <Link href="/login">
+            <a className="bg-white px-10 py-2 rounded-md text-violet-400">
+              Join now
+            </a>
+          </Link>
+        </section>
       </main>
     </>
   );
