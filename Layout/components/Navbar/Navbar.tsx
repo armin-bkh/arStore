@@ -1,7 +1,13 @@
 import { useOrientation } from "helpers/hooks/useOrientation";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useCallback, useState, useEffect } from "react";
+import React, {
+  useCallback,
+  useState,
+  useEffect,
+  useRef,
+  MouseEventHandler,
+} from "react";
 
 const links = [
   { id: 1, title: "home", href: "/" },
@@ -15,17 +21,34 @@ const Navbar = () => {
   const router = useRouter();
   const isLandscape = useOrientation();
   const [isOpen, setIsOpen] = useState<boolean>(false);
+  const menuRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     setIsOpen(isLandscape && false);
   }, [isLandscape]);
+
+  useEffect(() => {
+    function handleCloseMenu(e: any) {
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(e.target) &&
+        e.target.id !== "ham-menu"
+      ) {
+        setIsOpen(false);
+      }
+    }
+    document.addEventListener("mousedown", handleCloseMenu);
+    return () => {
+      document.removeEventListener("mousedown", handleCloseMenu);
+    };
+  }, [menuRef]);
 
   const openMenuHandler = useCallback(() => {
     setIsOpen((prevIsOpen) => !prevIsOpen);
   }, [isOpen]);
 
   return (
-    <header className="px-5 py-4 shadow-sm shadow-black/20 sticky top-0 bg-white">
+    <header className="px-5 py-4 shadow-sm shadow-black/20 sticky top-0 bg-white z-10 overflow-hidden">
       <div className="flex justify-between items-center safeArea">
         <div>
           <Link href="/">
@@ -33,6 +56,7 @@ const Navbar = () => {
           </Link>
         </div>
         <nav
+          ref={menuRef}
           className={`fixed w-48 bg-slate-100 z-50 top-0 h-full transition-all md:w-auto md:static
          md:bg-transparent md:h-auto ${isOpen ? "left-0" : "-left-full"}`}
         >
@@ -52,10 +76,29 @@ const Navbar = () => {
             ))}
           </ul>
         </nav>
-        <button className="md:hidden" onClick={openMenuHandler}>
-          <div className="w-8 h-1 bg-black rounded-sm"></div>
-          <div className="w-8 h-1 bg-black rounded-sm my-1"></div>
-          <div className="w-8 h-1 bg-black rounded-sm"></div>
+        <button
+          id="ham-menu"
+          className="md:hidden origin-center"
+          onClick={openMenuHandler}
+        >
+          <div
+            id="ham-menu"
+            className={`w-8 h-1 transform bg-black rounded-sm transition-all ${
+              isOpen && "rotate-45"
+            }`}
+          ></div>
+          <div
+            id="ham-menu"
+            className={`w-8 h-1 bg-black rounded-sm my-1 transition-all ${
+              isOpen && "hidden"
+            }`}
+          ></div>
+          <div
+            id="ham-menu"
+            className={`w-8 h-1 transform bg-black rounded-sm transition-all ${
+              isOpen && "-rotate-45 -mt-1"
+            }`}
+          ></div>
         </button>
       </div>
     </header>
