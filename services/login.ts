@@ -1,10 +1,10 @@
 import { http } from "./httpServces";
 
-interface UserDataType {
+export interface UserLoginDataType {
   email: string;
   password: string;
 }
 
-export function login(user: UserDataType) {
+export function login(user: UserLoginDataType) {
   return http.post("/user/login", user);
 }

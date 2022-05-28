@@ -5,6 +5,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { signup } from "services/signup";
 import { useRouter } from "next/router";
+import { useDispatch, useSelector } from "react-redux";
+import { registerUserRequest } from "redux/user/userActions";
+import { RootStateType } from "redux/rootReducer";
 
 const defaultValues = {
   name: "",
@@ -15,7 +18,9 @@ const defaultValues = {
 };
 
 const schema = Yup.object().shape({
-  name: Yup.string().required("Name field is required"),
+  name: Yup.string()
+    .min(6, "Name length should higher than 5 character")
+    .required("Name field is required"),
   email: Yup.string()
     .email("Email format is not valid")
     .required("Email field is required"),
@@ -23,7 +28,7 @@ const schema = Yup.object().shape({
     .matches(/^[0-9]{11}$/, "Phone number format is not valid")
     .required("Phone number field is required"),
   password: Yup.string()
-    .min(8, "Password length should be equal or higher than 8")
+    .min(8, "Password length should be equal or higher than 8 character")
     .required("Password field is required"),
   passwordConfirmation: Yup.string()
     .oneOf(
@@ -50,20 +55,17 @@ function SignupPage() {
     resolver: yupResolver(schema),
     shouldFocusError: true,
   });
-  const [error, setError] = useState<string>("");
+  const dispatch = useDispatch();
+  const { error } = useSelector((state: RootStateType) => state.user);
 
-  const onSubmit: SubmitHandler<SignupForm> = async (data) => {
+  const onSubmit: SubmitHandler<SignupForm> = (data) => {
     const { passwordConfirmation, ...userData } = data;
-    console.log("====================================");
-    console.log(data);
-    console.log("====================================");
     try {
-      // const user = await signup({ ...userData });
+      dispatch(registerUserRequest(userData));
       router.replace("/");
     } catch (error: any) {
       console.log("====================================");
       console.log(error.message, "sign up error is here");
-      setError(error.message);
       console.log("====================================");
     }
   };

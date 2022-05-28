@@ -1,12 +1,18 @@
 import { http } from "./httpServces";
 
-interface UserDataType {
+export interface UserSignupDataType {
   name: string;
   email: string;
   phoneNumber: string;
   password: string;
 }
 
-export function signup(user: UserDataType) {
-  return http.post("/user/register", user);
+export function signup(user: UserSignupDataType) {
+  const header = {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  };
+
+  return http.post("/user/register", user, header);
 }
