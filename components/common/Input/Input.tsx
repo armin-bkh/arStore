@@ -39,7 +39,7 @@ function Input(props: InputPropsType, _ref: any) {
         </span>
       )}
       {formState.errors[name]?.message && formState.touchedFields[name] && (
-        <span className="text-red-600 text-xs ml-3">
+        <span className="text-red-600 text-xs mt-1 ml-3">
           {formState.errors[name]?.message}
         </span>
       )}

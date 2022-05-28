@@ -9,7 +9,6 @@ export function* loginUser(action: {
 }) {
   try {
     const { data } = yield call(() => login(action.payload));
-    console.log(data);
     yield put(loginUserSuccess(data));
   } catch (error: any) {
     yield put(loginUserFailure(error.response.data.message));

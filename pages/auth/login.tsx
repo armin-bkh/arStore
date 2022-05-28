@@ -7,6 +7,7 @@ import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { RootStateType } from "redux/rootReducer";
 import { loginUserRequest } from "redux/user/userActions";
+import Link from "next/link";
 
 const defaultValues = {
   email: "",
@@ -84,6 +85,11 @@ function LoginPage() {
         >
           Submit
         </button>
+        <Link href="/auth/signup">
+          <a className="first-letter:capitalize text-sky-400 text-xs md:text-sm hover:underline cursor-pointer text-center mt-5">
+            you dont have an account?
+          </a>
+        </Link>
       </form>
     </main>
   );

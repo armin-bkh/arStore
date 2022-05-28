@@ -120,7 +120,7 @@ const Product = (props: ProductPropsType) => {
   const { product } = props;
 
   return (
-    <figure className="relative overflow-hidden border-b hover:shadow-lg transition cursor-pointer">
+    <figure className="relative border-b hover:shadow-lg hover:z-10 transition cursor-pointer">
       <div className="overflow-hidden relative w-[250px] h-[250px]">
         <Image src={product.image} layout="fill" draggable={false} priority />
       </div>

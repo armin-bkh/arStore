@@ -8,6 +8,9 @@ import React, {
   useRef,
   MouseEventHandler,
 } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { RootStateType } from "redux/rootReducer";
+import { logoutUser } from "redux/user/userActions";
 
 const links = [
   { id: 1, title: "home", href: "/" },
@@ -22,6 +25,8 @@ const Navbar = () => {
   const isLandscape = useOrientation();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const menuRef = useRef<HTMLElement>(null);
+  const { user } = useSelector((state: RootStateType) => state.user);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     setIsOpen(isLandscape && false);
@@ -43,12 +48,20 @@ const Navbar = () => {
     };
   }, [menuRef]);
 
+  useEffect(() => {
+    setIsOpen(false);
+  }, [router.pathname]);
+
   const openMenuHandler = useCallback(() => {
     setIsOpen((prevIsOpen) => !prevIsOpen);
   }, [isOpen]);
 
+  const logoutHandler = useCallback(() => {
+    dispatch(logoutUser());
+  }, []);
+
   return (
-    <header className="px-5 py-4 shadow-sm shadow-black/20 sticky top-0 bg-white z-10 overflow-hidden">
+    <header className="px-5 py-4 shadow-sm shadow-black/20 sticky top-0 bg-white z-20 overflow-hidden">
       <div className="flex justify-between items-center safeArea">
         <div>
           <Link href="/">
@@ -58,22 +71,35 @@ const Navbar = () => {
         <nav
           ref={menuRef}
           className={`fixed w-48 bg-slate-100 z-50 top-0 h-full transition-all md:w-auto md:static
-         md:bg-transparent md:h-auto ${isOpen ? "left-0" : "-left-full"}`}
+         md:bg-transparent md:h-auto ${user && "flex-1 justify-center"} ${
+            isOpen ? "left-0" : "-left-full"
+          }`}
         >
           <ul className="flex flex-col md:flex-row justify-center items-center py-4 md:py-0">
-            {links.map((link) => (
-              <li className="md:mb-0 mb-2 last:mb-0 md:text-lg" key={link.id}>
-                <Link href={link.href}>
-                  <a
-                    className={`capitalize px-5 py-1 hover:text-violet-300 transition ${
-                      router.pathname === link.href ? "text-violet-400" : null
-                    }`}
+            {links.map((link) =>
+              user && link.href === "/auth/login" ? (
+                <li key={link.id} className="w-full px-2 md:w-auto md:ml-auto">
+                  <button
+                    className="w-full bg-violet-400 rounded-full transition-all text-white px-4 py-1 duration-300 hover:shadow-md hover:shadow-violet-400/50"
+                    onClick={logoutHandler}
                   >
-                    {link.title}
-                  </a>
-                </Link>
-              </li>
-            ))}
+                    Logout
+                  </button>
+                </li>
+              ) : (
+                <li className="md:mb-0 mb-2 last:mb-0 md:text-lg" key={link.id}>
+                  <Link href={link.href}>
+                    <a
+                      className={`capitalize px-5 py-1 hover:text-violet-300 transition ${
+                        router.pathname === link.href ? "text-violet-400" : null
+                      }`}
+                    >
+                      {link.title}
+                    </a>
+                  </Link>
+                </li>
+              )
+            )}
           </ul>
         </nav>
         <button

@@ -5,6 +5,7 @@ import {
   LOGIN_USER_FAILURE,
   LOGIN_USER_REQUEST,
   LOGIN_USER_SUCCESS,
+  LOGOUT_USER,
   REGISTER_USER_FAILURE,
   REGISTER_USER_REQUEST,
   REGISTER_USER_SUCCESS,
@@ -37,4 +38,8 @@ export function loginUserFailure(error: string) {
 
 export function savedUserData(user: UserType) {
   return { type: SAVED_USER_DATA, payload: user };
+}
+
+export function logoutUser() {
+  return { type: LOGOUT_USER };
 }

@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useLayoutEffect } from "react";
 import { useDispatch } from "react-redux";
 import { savedUserData } from "redux/user/userActions";
 import Footer from "./components/Footer/Footer";
@@ -10,7 +10,8 @@ interface LayoutPropsType {
 
 const Layout = ({ children }: LayoutPropsType) => {
   const dispatch = useDispatch();
-  useEffect(() => {
+
+  useLayoutEffect(() => {
     const savedUser = JSON.parse(localStorage.getItem("ArStoreUser") || "");
     if (savedUser) {
       dispatch(savedUserData(savedUser));
