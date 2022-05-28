@@ -1,14 +1,17 @@
 import React, { useCallback, useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-
+import { Controller, type Control, type FormState } from "react-hook-form";
+import { InputNamesType, SignupForm } from "pages/auth/signup";
 interface InputPropsType {
   type: "text" | "password" | "tel" | "email";
-  name: string;
+  name: InputNamesType;
   lbl: string;
+  control: Control<SignupForm>;
+  formState: FormState<SignupForm>;
 }
 
 function Input(props: InputPropsType) {
-  const { type, name, lbl } = props;
+  const { type, name, lbl, control, formState } = props;
   const [isSecure, setIsSecure] = useState<boolean>(true);
 
   const handleShowPassword = useCallback(() => {
@@ -23,10 +26,17 @@ function Input(props: InputPropsType) {
       >
         {lbl}
       </label>
-      <input
-        className="rounded-md outline-none px-3 py-2 text-sm border-2 focus:shadow"
-        type={isSecure ? type : "text"}
-        id={name}
+      <Controller
+        control={control}
+        name={name}
+        render={({ field }) => (
+          <input
+            className="rounded-md outline-none px-3 py-2 text-sm border-2 focus:shadow autoFillInput"
+            type={isSecure ? type : "text"}
+            id={name}
+            {...field}
+          />
+        )}
       />
       {type === "password" && (
         <span
@@ -36,7 +46,11 @@ function Input(props: InputPropsType) {
           {isSecure ? <AiFillEye /> : <AiFillEyeInvisible />}
         </span>
       )}
-      <span className="text-red-600 text-xs ml-3">error message</span>
+      {formState.errors[name]?.message && formState.touchedFields[name] && (
+        <span className="text-red-600 text-xs ml-3">
+          {formState.errors[name]?.message}
+        </span>
+      )}
     </fieldset>
   );
 }
