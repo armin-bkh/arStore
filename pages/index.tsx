@@ -72,7 +72,7 @@ const HomePage = (props: HomePagePropsType) => {
                 <span className="text-sky-400 text-6xl lg:text-8xl">Ar</span>{" "}
                 shoes
               </p>
-              <Link href="/auth/signup">
+              <Link href="/products">
                 <a className="bg-sky-400 rounded-md px-10 py-2 block">
                   Start the tour
                 </a>
