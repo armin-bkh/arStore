@@ -13,11 +13,6 @@ function Input(props: InputPropsType, _ref: any) {
   const { type, name, lbl, formState, ...rest } = props;
   const [isSecure, setIsSecure] = useState<boolean>(true);
 
-  console.log("====================================");
-  console.log(formState.touchedFields, "<=== touched");
-  console.log(formState.errors, "<=== errors");
-  console.log("====================================");
-
   const handleShowPassword = useCallback(() => {
     setIsSecure((prevIsSecure) => !prevIsSecure);
   }, [isSecure]);
