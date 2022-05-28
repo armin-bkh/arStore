@@ -1,6 +1,6 @@
 import Input from "components/common/Input/Input";
 import React, { useState } from "react";
-import { useForm, type SubmitHandler } from "react-hook-form";
+import { Controller, useForm, type SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { signup } from "services/signup";
@@ -50,7 +50,7 @@ export interface SignupForm {
 function SignupPage() {
   const router = useRouter();
   const { control, handleSubmit, formState } = useForm<SignupForm>({
-    mode: "onChange",
+    mode: "all",
     reValidateMode: "onChange",
     defaultValues,
     resolver: yupResolver(schema),
@@ -60,6 +60,9 @@ function SignupPage() {
 
   const onSubmit: SubmitHandler<SignupForm> = async (data) => {
     const { passwordConfirmation, ...userData } = data;
+    console.log("====================================");
+    console.log(data);
+    console.log("====================================");
     try {
       // const user = await signup({ ...userData });
       router.replace("/");
@@ -80,42 +83,62 @@ function SignupPage() {
         <h1 className="text-4xl md:text-5xl text-sky-400 font-bold mb-10">
           Sign up
         </h1>
-        <Input
-          formState={formState}
+        <Controller
           control={control}
           name="name"
-          type="text"
-          lbl="name"
+          render={({ field, formState }) => (
+            <Input {...field} formState={formState} type="text" lbl="name" />
+          )}
         />
         <div className="flex flex-col md:flex-row md:gap-5 gap-0">
-          <Input
-            formState={formState}
+          <Controller
             control={control}
             name="email"
-            type="email"
-            lbl="email"
+            render={({ field, formState }) => (
+              <Input
+                {...field}
+                formState={formState}
+                type="email"
+                lbl="email"
+              />
+            )}
           />
-          <Input
-            formState={formState}
+          <Controller
             control={control}
             name="phoneNumber"
-            type="tel"
-            lbl="phone number"
+            render={({ field, formState }) => (
+              <Input
+                {...field}
+                formState={formState}
+                type="tel"
+                lbl="phone number"
+              />
+            )}
           />
         </div>
-        <Input
-          formState={formState}
+        <Controller
           control={control}
           name="password"
-          type="password"
-          lbl="password"
+          render={({ field, formState }) => (
+            <Input
+              {...field}
+              formState={formState}
+              type="password"
+              lbl="password"
+            />
+          )}
         />
-        <Input
-          formState={formState}
+        <Controller
           control={control}
           name="passwordConfirmation"
-          type="password"
-          lbl="password confirmation"
+          render={({ field, formState }) => (
+            <Input
+              {...field}
+              formState={formState}
+              type="password"
+              lbl="password confirmation"
+            />
+          )}
         />
         {error && (
           <span className="text-rose-500 text-sm mt-5 ml-5 first-letter:capitalize">

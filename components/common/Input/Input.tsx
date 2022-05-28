@@ -1,18 +1,22 @@
 import React, { useCallback, useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
-import { Controller, type Control, type FormState } from "react-hook-form";
-import { InputNamesType, SignupForm } from "pages/auth/signup";
+import { FormState } from "react-hook-form";
+import { InputNamesType } from "pages/auth/signup";
 interface InputPropsType {
   type: "text" | "password" | "tel" | "email";
-  name: InputNamesType;
+  name: string;
   lbl: string;
-  control: Control<SignupForm>;
-  formState: FormState<SignupForm>;
+  formState: FormState<any>;
 }
 
-function Input(props: InputPropsType) {
-  const { type, name, lbl, control, formState } = props;
+function Input(props: InputPropsType, _ref: any) {
+  const { type, name, lbl, formState, ...rest } = props;
   const [isSecure, setIsSecure] = useState<boolean>(true);
+
+  console.log("====================================");
+  console.log(formState.touchedFields, "<=== touched");
+  console.log(formState.errors, "<=== errors");
+  console.log("====================================");
 
   const handleShowPassword = useCallback(() => {
     setIsSecure((prevIsSecure) => !prevIsSecure);
@@ -26,17 +30,11 @@ function Input(props: InputPropsType) {
       >
         {lbl}
       </label>
-      <Controller
-        control={control}
-        name={name}
-        render={({ field }) => (
-          <input
-            className="rounded-md outline-none px-3 py-2 text-sm border-2 focus:shadow autoFillInput"
-            type={isSecure ? type : "text"}
-            id={name}
-            {...field}
-          />
-        )}
+      <input
+        className="rounded-md outline-none px-3 py-2 text-sm border-2 focus:shadow autoFillInput"
+        type={isSecure ? type : "text"}
+        id={name}
+        {...rest}
       />
       {type === "password" && (
         <span
@@ -55,4 +53,4 @@ function Input(props: InputPropsType) {
   );
 }
 
-export default Input;
+export default React.forwardRef(Input);
