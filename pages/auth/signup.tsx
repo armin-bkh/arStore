@@ -1,8 +1,10 @@
 import Input from "components/common/Input/Input";
-import React, { useCallback, useEffect } from "react";
+import React, { useState } from "react";
 import { useForm, type SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
+import { signup } from "services/signup";
+import { useRouter } from "next/router";
 
 const defaultValues = {
   name: "",
@@ -46,6 +48,7 @@ export interface SignupForm {
 }
 
 function SignupPage() {
+  const router = useRouter();
   const { control, handleSubmit, formState } = useForm<SignupForm>({
     mode: "onChange",
     reValidateMode: "onChange",
@@ -53,15 +56,19 @@ function SignupPage() {
     resolver: yupResolver(schema),
     shouldFocusError: true,
   });
+  const [error, setError] = useState<string>("");
 
-  useEffect(() => {
-    console.log("====================================");
-    console.log(formState);
-    console.log("====================================");
-  }, [control]);
-
-  const onSubmit: SubmitHandler<SignupForm> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<SignupForm> = async (data) => {
+    const { passwordConfirmation, ...userData } = data;
+    try {
+      // const user = await signup({ ...userData });
+      router.replace("/");
+    } catch (error: any) {
+      console.log("====================================");
+      console.log(error.message, "sign up error is here");
+      setError(error.message);
+      console.log("====================================");
+    }
   };
 
   return (
@@ -93,7 +100,7 @@ function SignupPage() {
             control={control}
             name="phoneNumber"
             type="tel"
-            lbl="phoneNumber"
+            lbl="phone number"
           />
         </div>
         <Input
@@ -110,8 +117,13 @@ function SignupPage() {
           type="password"
           lbl="password confirmation"
         />
+        {error && (
+          <span className="text-rose-500 text-sm mt-5 ml-5 first-letter:capitalize">
+            {error}
+          </span>
+        )}
         <button
-          className="bg-rose-400 py-2 rounded-md text-white disabled:bg-rose-800 disabled:opacity-50"
+          className="bg-rose-400 py-2 rounded-md mt-7 text-white disabled:bg-rose-800 disabled:opacity-50"
           type="submit"
           disabled={!formState.isValid}
         >
