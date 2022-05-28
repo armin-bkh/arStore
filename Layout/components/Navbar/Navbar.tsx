@@ -14,7 +14,7 @@ const links = [
   { id: 2, title: "products", href: "/products" },
   { id: 3, title: "about", href: "/about" },
   { id: 4, title: "contact", href: "/contact" },
-  { id: 5, title: "login", href: "/login" },
+  { id: 5, title: "login", href: "/auth/login" },
 ];
 
 const Navbar = () => {

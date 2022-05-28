@@ -1,7 +1,6 @@
 import React, { useCallback, useState } from "react";
 import { AiFillEye, AiFillEyeInvisible } from "react-icons/ai";
 import { FormState } from "react-hook-form";
-import { InputNamesType } from "pages/auth/signup";
 interface InputPropsType {
   type: "text" | "password" | "tel" | "email";
   name: string;
