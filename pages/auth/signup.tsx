@@ -1,9 +1,8 @@
 import Input from "components/common/Input/Input";
-import React, { useState } from "react";
+import React from "react";
 import { Controller, useForm, type SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { signup } from "services/signup";
 import { useRouter } from "next/router";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUserRequest } from "redux/user/userActions";
@@ -60,14 +59,8 @@ function SignupPage() {
 
   const onSubmit: SubmitHandler<SignupForm> = (data) => {
     const { passwordConfirmation, ...userData } = data;
-    try {
-      dispatch(registerUserRequest(userData));
-      router.replace("/");
-    } catch (error: any) {
-      console.log("====================================");
-      console.log(error.message, "sign up error is here");
-      console.log("====================================");
-    }
+    dispatch(registerUserRequest(userData));
+    router.replace("/");
   };
 
   return (

@@ -4,6 +4,9 @@ import { Controller, useForm, type SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useRouter } from "next/router";
+import { useDispatch, useSelector } from "react-redux";
+import { RootStateType } from "redux/rootReducer";
+import { loginUserRequest } from "redux/user/userActions";
 
 const defaultValues = {
   email: "",
@@ -33,20 +36,12 @@ function LoginPage() {
     resolver: yupResolver(schema),
     shouldFocusError: true,
   });
-  const [error, setError] = useState<string>("");
+  const { error } = useSelector((state: RootStateType) => state.user);
+  const dispatch = useDispatch();
 
-  const onSubmit: SubmitHandler<LoginForm> = async (data) => {
-    console.log("====================================");
-    console.log(data);
-    console.log("====================================");
-    try {
-      router.replace("/");
-    } catch (error: any) {
-      console.log("====================================");
-      console.log(error.message, "login error is here");
-      setError(error.message);
-      console.log("====================================");
-    }
+  const onSubmit: SubmitHandler<LoginForm> = (data) => {
+    dispatch(loginUserRequest(data));
+    router.replace("/");
   };
 
   return (
