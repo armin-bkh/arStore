@@ -1,4 +1,4 @@
-import type { GetServerSideProps } from "next";
+import { GetServerSideProps, PreviewData } from "next";
 import styles from "styles/home.module.css";
 import Head from "next/head";
 import Link from "next/link";
@@ -8,6 +8,11 @@ import Service from "components/Service/Service";
 import { getProducts } from "services/getProducts";
 import Image from "next/image";
 import { ProductType } from "types/productTypes";
+import { wrapper } from "redux/store";
+import { getCookie } from "cookies-next";
+import { AUTH_COOKIE } from "redux/auth/authReducer";
+import { savedUserData } from "redux/auth/authActions";
+import { serverAuth } from "helpers/utilities/serverAuth";
 
 const services = [
   {
@@ -44,14 +49,18 @@ interface HomePagePropsType {
   products: ProductType[];
 }
 
-export const getServerSideProps: GetServerSideProps = async () => {
-  const { data } = await getProducts();
-  return {
-    props: {
-      products: data.slice(0, 4),
-    },
-  };
-};
+export const getServerSideProps = wrapper.getServerSideProps(
+  (store) =>
+    async ({ req, res }) => {
+      serverAuth(store, req, res);
+      const { data: products } = await getProducts();
+      return {
+        props: {
+          products: products.splice(0, 4),
+        },
+      };
+    }
+);
 
 const HomePage = (props: HomePagePropsType) => {
   const { products } = props;

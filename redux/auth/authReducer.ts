@@ -1,3 +1,4 @@
+import { deleteCookie, setCookie } from "cookies-next";
 import { NextRouter } from "next/router";
 import { UserType } from "types/userType";
 import {
@@ -11,6 +12,7 @@ import {
   SAVED_USER_DATA,
 } from "./actionTypes";
 
+export const AUTH_COOKIE = "ARSTORE_AUTH_COOKIE";
 export interface AuthStateType {
   user: UserType | null;
   loading: boolean;
@@ -26,7 +28,7 @@ export interface AuthActionType {
   };
 }
 
-const initialState: AuthStateType = {
+export const initialState: AuthStateType = {
   user: null,
   loading: false,
   error: "",
@@ -35,33 +37,33 @@ const initialState: AuthStateType = {
 const userReducer = (
   state: AuthStateType = initialState,
   action: AuthActionType
-) => {
+): AuthStateType => {
   switch (action.type) {
     case SAVED_USER_DATA: {
-      return { loading: false, error: "", user: action.payload?.auth };
+      return { loading: false, error: "", user: action.payload?.auth || null };
     }
     case REGISTER_USER_REQUEST: {
       return { loading: true, error: "", user: null };
     }
     case REGISTER_USER_SUCCESS: {
-      localStorage.setItem("ArStoreUser", JSON.stringify(action.payload?.auth));
-      return { loading: false, error: "", user: action.payload?.auth };
+      setCookie(AUTH_COOKIE, JSON.stringify(action.payload?.auth));
+      return { loading: false, error: "", user: action.payload?.auth || null };
     }
     case REGISTER_USER_FAILURE: {
-      return { loading: false, error: action.payload?.error, user: null };
+      return { loading: false, error: action.payload?.error || "", user: null };
     }
     case LOGIN_USER_REQUEST: {
       return { ...state, loading: true, error: "" };
     }
     case LOGIN_USER_SUCCESS: {
-      localStorage.setItem("ArStoreUser", JSON.stringify(action.payload?.auth));
-      return { loading: false, error: "", user: action.payload?.auth };
+      setCookie(AUTH_COOKIE, JSON.stringify(action.payload?.auth));
+      return { loading: false, error: "", user: action.payload?.auth || null };
     }
     case LOGIN_USER_FAILURE: {
-      return { loading: false, error: action.payload?.error, user: null };
+      return { loading: false, error: action.payload?.error || "", user: null };
     }
     case LOGOUT_USER: {
-      localStorage.removeItem("ArStoreUser");
+      deleteCookie(AUTH_COOKIE);
       return { loading: false, error: "", user: null };
     }
     default:

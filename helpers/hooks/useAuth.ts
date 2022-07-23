@@ -6,12 +6,11 @@ import {
   logoutUser,
   registerUserRequest,
 } from "redux/auth/authActions";
-import { AuthStateType } from "redux/auth/authReducer";
 import { UserLoginDataType } from "services/login";
 import { UserSignupDataType } from "services/signup";
 
 export const useAuth = () => {
-  const auth = useAppSelector<AuthStateType>((state) => state.auth);
+  const auth = useAppSelector((state) => state.auth);
   const dispatch = useAppDispatch();
   const router = useRouter();
 

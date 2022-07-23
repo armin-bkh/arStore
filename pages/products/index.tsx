@@ -1,17 +1,22 @@
 import Product from "components/Product/Product";
+import { serverAuth } from "helpers/utilities/serverAuth";
 import { useState } from "react";
+import { wrapper } from "redux/store";
 import { getProducts } from "services/getProducts";
 import { ProductType } from "types/productTypes";
 
-export const getServerSideProps = async () => {
-  const { data } = await getProducts();
-
-  return {
-    props: {
-      products: data,
-    },
-  };
-};
+export const getServerSideProps = wrapper.getServerSideProps(
+  (store) =>
+    async ({ req, res }) => {
+      const { data } = await getProducts();
+      serverAuth(store, req, res);
+      return {
+        props: {
+          products: data,
+        },
+      };
+    }
+);
 
 interface ProductsPageProps {
   products: ProductType[];

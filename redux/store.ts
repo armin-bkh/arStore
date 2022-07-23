@@ -1,20 +1,45 @@
-import { createStore, applyMiddleware } from "redux";
+import { createStore, applyMiddleware, AnyAction } from "redux";
 import createSagaMiddleware from "redux-saga";
-import rootReducer from "./rootReducer";
-import { rootSaga } from "./sagas/rootSaga";
+import rootReducer from "redux/rootReducer";
+import { rootSaga } from "redux/sagas/rootSaga";
 import { composeWithDevTools } from "redux-devtools-extension";
+import { createWrapper, Context, HYDRATE } from "next-redux-wrapper";
+
+const reducer = (
+  state: ReturnType<typeof rootReducer> = {
+    auth: { error: "", loading: false, user: null },
+  },
+  action: AnyAction
+) => {
+  if (action.type === HYDRATE) {
+    const nextState = {
+      ...state, // use previous state
+      ...action.payload, // apply delta from hydration
+    };
+    return nextState;
+  } else {
+    return rootReducer(state, action);
+  }
+};
 
 const saga = createSagaMiddleware();
 
-const store = createStore(
-  rootReducer,
-  composeWithDevTools(applyMiddleware(saga))
-);
+export const makeStore = (context: Context) => {
+  const store = createStore(
+    reducer,
+    composeWithDevTools(applyMiddleware(saga))
+  );
 
-saga.run(rootSaga);
+  saga.run(rootSaga);
 
-export default store;
+  return store;
+};
+type Store = ReturnType<typeof makeStore>;
 
-export type RootStateType = ReturnType<typeof store.getState>;
+export type RootStateType = ReturnType<Store["getState"]>;
 // Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
-export type AppDispatch = typeof store.dispatch;
+export type AppDispatch = Store["dispatch"];
+
+export const wrapper = createWrapper<Store>(makeStore, {
+  debug: true,
+});
