@@ -1,16 +1,9 @@
 import { useOrientation } from "helpers/hooks/useOrientation";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, {
-  useCallback,
-  useState,
-  useEffect,
-  useRef,
-  MouseEventHandler,
-} from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { RootStateType } from "redux/rootReducer";
-import { logoutUser } from "redux/user/userActions";
+import React, { useCallback, useState, useEffect, useRef } from "react";
+import { BsMinecartLoaded } from "react-icons/bs";
+import { useAuth } from "helpers/hooks/useAuth";
 
 const links = [
   { id: 1, title: "home", href: "/" },
@@ -18,6 +11,7 @@ const links = [
   { id: 3, title: "about", href: "/about" },
   { id: 4, title: "contact", href: "/contact" },
   { id: 5, title: "login", href: "/auth/login" },
+  { id: 6, title: <BsMinecartLoaded />, href: "/cart" },
 ];
 
 const Navbar = () => {
@@ -25,8 +19,7 @@ const Navbar = () => {
   const isLandscape = useOrientation();
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const menuRef = useRef<HTMLElement>(null);
-  const { user } = useSelector((state: RootStateType) => state.user);
-  const dispatch = useDispatch();
+  const { user, handleLogout } = useAuth();
 
   useEffect(() => {
     setIsOpen(isLandscape && false);
@@ -56,10 +49,6 @@ const Navbar = () => {
     setIsOpen((prevIsOpen) => !prevIsOpen);
   }, [isOpen]);
 
-  const logoutHandler = useCallback(() => {
-    dispatch(logoutUser());
-  }, []);
-
   return (
     <header className="px-5 py-4 shadow-sm shadow-black/20 sticky top-0 bg-white z-20 overflow-hidden">
       <div className="flex justify-between items-center safeArea">
@@ -75,13 +64,13 @@ const Navbar = () => {
             isOpen ? "left-0" : "-left-full"
           }`}
         >
-          <ul className="flex flex-col md:flex-row justify-center items-center py-4 md:py-0">
+          <ul className="flex flex-col md:flex-row justify-center items-center py-4 md:py-0 gap-y-2 md:gap-y-0">
             {links.map((link) =>
               user && link.href === "/auth/login" ? (
                 <li key={link.id} className="w-full px-2 md:w-auto md:ml-auto">
                   <button
                     className="w-full bg-violet-400 rounded-full transition-all text-white px-4 py-1 duration-300 hover:shadow-md hover:shadow-violet-400/50"
-                    onClick={logoutHandler}
+                    onClick={handleLogout}
                   >
                     Logout
                   </button>
@@ -90,7 +79,7 @@ const Navbar = () => {
                 <li className="md:mb-0 mb-2 last:mb-0 md:text-lg" key={link.id}>
                   <Link href={link.href}>
                     <a
-                      className={`capitalize px-5 py-1 hover:text-violet-300 transition ${
+                      className={`capitalize px-5 py-1 hover:text-violet-300 transition block ${
                         router.pathname === link.href ? "text-violet-400" : null
                       }`}
                     >

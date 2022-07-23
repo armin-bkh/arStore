@@ -1,13 +1,11 @@
 import Input from "components/common/Input/Input";
-import React, { useState } from "react";
-import { Controller, useForm, type SubmitHandler } from "react-hook-form";
+import React, { useCallback } from "react";
+import { Controller, useForm, SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useRouter } from "next/router";
-import { useDispatch, useSelector } from "react-redux";
-import { RootStateType } from "redux/rootReducer";
-import { loginUserRequest } from "redux/user/userActions";
 import Link from "next/link";
+import { useAuth } from "helpers/hooks/useAuth";
 
 const defaultValues = {
   email: "",
@@ -29,7 +27,6 @@ export interface LoginForm {
 }
 
 function LoginPage() {
-  const router = useRouter();
   const { control, handleSubmit, formState } = useForm<LoginForm>({
     mode: "all",
     reValidateMode: "onChange",
@@ -37,13 +34,11 @@ function LoginPage() {
     resolver: yupResolver(schema),
     shouldFocusError: true,
   });
-  const { error } = useSelector((state: RootStateType) => state.user);
-  const dispatch = useDispatch();
+  const { error, loading, handleLogin } = useAuth();
 
-  const onSubmit: SubmitHandler<LoginForm> = (data) => {
-    dispatch(loginUserRequest(data));
-    router.replace("/");
-  };
+  const onSubmit: SubmitHandler<LoginForm> = useCallback((data) => {
+    handleLogin(data);
+  }, []);
 
   return (
     <main className="safeArea p-5 flex justify-center items-center min-h-[70vh]">
@@ -83,7 +78,7 @@ function LoginPage() {
           type="submit"
           disabled={!formState.isValid}
         >
-          Submit
+          {loading ? "Loading..." : "Submit"}
         </button>
         <Link href="/auth/signup">
           <a className="first-letter:capitalize text-sky-400 text-xs md:text-sm hover:underline cursor-pointer text-center mt-5">

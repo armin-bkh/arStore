@@ -14,3 +14,7 @@ const store = createStore(
 saga.run(rootSaga);
 
 export default store;
+
+export type RootStateType = ReturnType<typeof store.getState>;
+// Inferred type: {posts: PostsState, comments: CommentsState, users: UsersState}
+export type AppDispatch = typeof store.dispatch;

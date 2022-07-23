@@ -3,11 +3,8 @@ import React from "react";
 import { Controller, useForm, type SubmitHandler } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import { useRouter } from "next/router";
-import { useDispatch, useSelector } from "react-redux";
-import { registerUserRequest } from "redux/user/userActions";
-import { RootStateType } from "redux/rootReducer";
 import Link from "next/link";
+import { useAuth } from "helpers/hooks/useAuth";
 
 const defaultValues = {
   name: "",
@@ -38,7 +35,7 @@ const schema = Yup.object().shape({
     .required("Password confirmation field is required"),
 });
 
-export interface SignupForm {
+export interface SignUpForm {
   name: string;
   email: string;
   phoneNumber: string;
@@ -46,22 +43,19 @@ export interface SignupForm {
   passwordConfirmation: string;
 }
 
-function SignupPage() {
-  const router = useRouter();
-  const { control, handleSubmit, formState } = useForm<SignupForm>({
+function SignUpPage() {
+  const { control, handleSubmit, formState } = useForm<SignUpForm>({
     mode: "all",
     reValidateMode: "onChange",
     defaultValues,
     resolver: yupResolver(schema),
     shouldFocusError: true,
   });
-  const dispatch = useDispatch();
-  const { error } = useSelector((state: RootStateType) => state.user);
+  const { error, loading, handleRegister } = useAuth();
 
-  const onSubmit: SubmitHandler<SignupForm> = (data) => {
+  const onSubmit: SubmitHandler<SignUpForm> = (data) => {
     const { passwordConfirmation, ...userData } = data;
-    dispatch(registerUserRequest(userData));
-    router.replace("/");
+    handleRegister(userData);
   };
 
   return (
@@ -140,7 +134,7 @@ function SignupPage() {
           type="submit"
           disabled={!formState.isValid}
         >
-          Submit
+          {loading ? "Loading..." : "Submit"}
         </button>
         <Link href="/auth/login">
           <a className="first-letter:capitalize text-sky-400 text-xs md:text-sm hover:underline cursor-pointer text-center mt-5">
@@ -152,4 +146,4 @@ function SignupPage() {
   );
 }
 
-export default SignupPage;
+export default SignUpPage;
