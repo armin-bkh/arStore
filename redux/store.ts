@@ -5,8 +5,10 @@ import { rootSaga } from "redux/sagas/rootSaga";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { createWrapper, Context, HYDRATE } from "next-redux-wrapper";
 
+export type TState = ReturnType<typeof rootReducer>;
+
 const reducer = (
-  state: ReturnType<typeof rootReducer> = {
+  state: TState = {
     auth: { error: "", loading: false, user: null },
   },
   action: AnyAction

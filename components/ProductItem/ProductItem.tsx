@@ -5,7 +5,7 @@ interface ProductProps {
   product: ProductType;
 }
 
-const Product = (props: ProductProps) => {
+const ProductItem = (props: ProductProps) => {
   const { product } = props;
 
   return (
@@ -13,7 +13,12 @@ const Product = (props: ProductProps) => {
       <div className="overflow-hidden relative w-[100px] h-[100px] md:w-full md:h-[270px]">
         <Image src={product.image} layout="fill" draggable={false} priority />
       </div>
-      <figcaption className="p-2 md:p-5 flex flex-row md:flex-col flex-1">
+      <figcaption className="p-2 md:p-5 relative flex flex-row md:flex-col flex-1">
+        {product.discount > 0 && (
+          <span className="absolute top-7 md:-top-3 bg-rose-300 text-xs w-8 h-8 font-bold rounded-full flex justify-center items-center">
+            {product.discount}%
+          </span>
+        )}
         <p className="text-center text-sm md:text-xl font-bold mb-2">
           {product.name}
         </p>
@@ -33,4 +38,4 @@ const Product = (props: ProductProps) => {
   );
 };
 
-export default Product;
+export default ProductItem;

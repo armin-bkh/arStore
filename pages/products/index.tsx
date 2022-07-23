@@ -1,4 +1,4 @@
-import Product from "components/Product/Product";
+import ProductItem from "components/ProductItem/ProductItem";
 import { serverAuth } from "helpers/utilities/serverAuth";
 import { useState } from "react";
 import { wrapper } from "redux/store";
@@ -32,7 +32,7 @@ function ProductsPage(props: ProductsPageProps) {
       <section className="col-span-4 lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
         {productsList && productsList.length > 0
           ? productsList.map((product) => (
-              <Product key={product._id} product={product} />
+              <ProductItem key={product._id} product={product} />
             ))
           : null}
       </section>

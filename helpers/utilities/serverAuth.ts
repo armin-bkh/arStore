@@ -10,7 +10,8 @@ export function serverAuth(
   res: ServerResponse
 ) {
   const data = getCookie(AUTH_COOKIE, { req, res });
-  if (data) {
+  const { auth } = store.getState();
+  if (!auth.user && data) {
     const parsedData = JSON.parse(data as string);
     store.dispatch(savedUserData({ auth: parsedData }));
   }

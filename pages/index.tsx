@@ -9,9 +9,6 @@ import { getProducts } from "services/getProducts";
 import Image from "next/image";
 import { ProductType } from "types/productTypes";
 import { wrapper } from "redux/store";
-import { getCookie } from "cookies-next";
-import { AUTH_COOKIE } from "redux/auth/authReducer";
-import { savedUserData } from "redux/auth/authActions";
 import { serverAuth } from "helpers/utilities/serverAuth";
 
 const services = [
@@ -133,7 +130,12 @@ const Product = (props: ProductPropsType) => {
       <div className="overflow-hidden relative w-[250px] h-[250px]">
         <Image src={product.image} layout="fill" draggable={false} priority />
       </div>
-      <figcaption className="p-5">
+      <figcaption className="p-5 relative">
+        {product.discount > 0 && (
+          <span className="absolute -top-3 bg-rose-300 text-xs w-8 h-8 font-bold rounded-full flex justify-center items-center">
+            {product.discount}%
+          </span>
+        )}
         <p className="text-center text-xl font-bold mb-2">{product.name}</p>
         <div className="text-gray-400 text-right text-sm">
           {product.description.slice(0, 2).map((desc) => (
