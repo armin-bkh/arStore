@@ -1,15 +1,16 @@
 import { createStore, applyMiddleware, AnyAction } from "redux";
 import createSagaMiddleware from "redux-saga";
-import rootReducer from "redux/rootReducer";
+import { combinedReducer } from "redux/combinedReducer";
 import { rootSaga } from "redux/sagas/rootSaga";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { createWrapper, Context, HYDRATE } from "next-redux-wrapper";
 
-export type TState = ReturnType<typeof rootReducer>;
+export type TState = ReturnType<typeof combinedReducer>;
 
 const reducer = (
   state: TState = {
     auth: { error: "", loading: false, user: null },
+    cart: { cart: [], total: 0 },
   },
   action: AnyAction
 ) => {
@@ -20,7 +21,7 @@ const reducer = (
     };
     return nextState;
   } else {
-    return rootReducer(state, action);
+    return combinedReducer(state, action);
   }
 };
 

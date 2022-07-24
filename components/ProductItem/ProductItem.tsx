@@ -1,3 +1,5 @@
+import { useCart } from "helpers/hooks/useCart";
+import { isExist } from "helpers/utilities/isExist";
 import Image from "next/image";
 import { ProductType } from "types/productTypes";
 
@@ -7,6 +9,8 @@ interface ProductProps {
 
 const ProductItem = (props: ProductProps) => {
   const { product } = props;
+
+  const { handleIncrementCartItem, cart } = useCart();
 
   return (
     <figure className="relative border-b hover:shadow-lg hover:z-10 transition cursor-pointer flex flex-row md:flex-col">
@@ -29,8 +33,11 @@ const ProductItem = (props: ProductProps) => {
         </div>
         <div className="flex flex-col md:flex-row justify-center items-center md:mt-5 ml-auto">
           <p className="text-xs md:text-base">{product.offPrice} $</p>
-          <button className="rounded-full px-3 py-1 bg-rose-500 text-white md:ml-5 text-xs md:text-base">
-            Add to cart
+          <button
+            onClick={() => handleIncrementCartItem({ ...product, qty: 1 })}
+            className="rounded-full px-3 py-1 bg-rose-500 text-white md:ml-5 text-xs md:text-base"
+          >
+            {isExist(cart, product._id) ? "In cart" : "Add to cart"}
           </button>
         </div>
       </figcaption>

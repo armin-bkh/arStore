@@ -10,6 +10,8 @@ import Image from "next/image";
 import { ProductType } from "types/productTypes";
 import { wrapper } from "redux/store";
 import { serverAuth } from "helpers/utilities/serverAuth";
+import { isExist } from "helpers/utilities/isExist";
+import { useCart } from "helpers/hooks/useCart";
 
 const services = [
   {
@@ -125,6 +127,8 @@ interface ProductPropsType {
 const Product = (props: ProductPropsType) => {
   const { product } = props;
 
+  const { cart } = useCart();
+
   return (
     <figure className="relative border-b hover:shadow-lg hover:z-10 transition cursor-pointer">
       <div className="overflow-hidden relative w-[250px] h-[250px]">
@@ -145,7 +149,7 @@ const Product = (props: ProductPropsType) => {
         <div className="flex justify-center items-center mt-5">
           <p>{product.offPrice} $</p>
           <button className="rounded-full px-3 py-1 bg-rose-500 text-white ml-5">
-            Add to cart
+            {isExist(cart, product._id) ? "In cart" : "Add to cart"}
           </button>
         </div>
       </figcaption>

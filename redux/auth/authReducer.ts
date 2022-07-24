@@ -34,7 +34,7 @@ export const initialState: AuthStateType = {
   error: "",
 };
 
-const userReducer = (
+export const userReducer = (
   state: AuthStateType = initialState,
   action: AuthActionType
 ): AuthStateType => {
@@ -70,5 +70,3 @@ const userReducer = (
       return state;
   }
 };
-
-export default userReducer;
