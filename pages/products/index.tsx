@@ -1,6 +1,8 @@
+import Head from "next/head";
+import { useState } from "react";
+
 import ProductItem from "components/ProductItem/ProductItem";
 import { serverAuth } from "helpers/utilities/serverAuth";
-import { useState } from "react";
 import { wrapper } from "redux/store";
 import { getProducts } from "services/getProducts";
 import { ProductType } from "types/productTypes";
@@ -28,15 +30,20 @@ function ProductsPage(props: ProductsPageProps) {
     products || null
   );
   return (
-    <main className="safeArea grid grid-cols-4 p-5">
-      <section className="col-span-4 lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
-        {productsList && productsList.length > 0
-          ? productsList.map((product) => (
-              <ProductItem key={product._id} product={product} />
-            ))
-          : null}
-      </section>
-    </main>
+    <>
+      <Head>
+        <title>Products | ArStore</title>
+      </Head>
+      <main className="safeArea grid grid-cols-4 p-5">
+        <section className="col-span-4 lg:col-span-3 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3">
+          {productsList && productsList.length > 0
+            ? productsList.map((product) => (
+                <ProductItem key={product._id} product={product} />
+              ))
+            : null}
+        </section>
+      </main>
+    </>
   );
 }
 

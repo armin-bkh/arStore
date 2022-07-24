@@ -127,7 +127,7 @@ interface ProductPropsType {
 const Product = (props: ProductPropsType) => {
   const { product } = props;
 
-  const { cart } = useCart();
+  const { cart, handleIncrementCartItem } = useCart();
 
   return (
     <figure className="relative border-b hover:shadow-lg hover:z-10 transition cursor-pointer">
@@ -148,7 +148,10 @@ const Product = (props: ProductPropsType) => {
         </div>
         <div className="flex justify-center items-center mt-5">
           <p>{product.offPrice} $</p>
-          <button className="rounded-full px-3 py-1 bg-rose-500 text-white ml-5">
+          <button
+            className="rounded-full px-3 py-1 bg-rose-500 text-white ml-5"
+            onClick={() => handleIncrementCartItem({ ...product, qty: 1 })}
+          >
             {isExist(cart, product._id) ? "In cart" : "Add to cart"}
           </button>
         </div>

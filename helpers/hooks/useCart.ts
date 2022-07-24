@@ -10,6 +10,7 @@ import {
 } from "redux/cart/cartActions";
 import { CART_COOKIE, CartItem } from "redux/cart/cartReducer";
 import { isExist } from "helpers/utilities/isExist";
+import { isLastOne } from "helpers/utilities/isLastOne";
 
 export const useCart = () => {
   const cart = useAppSelector((state) => state.cart);
@@ -20,27 +21,31 @@ export const useCart = () => {
   }, [cart]);
 
   const handleRemoveCartItem = useCallback(
-    (cartItem: CartItem) => {
-      dispatch(removeCartItem(cartItem));
-      toast(`${cartItem.name} removed from your cart`, { type: "info" });
+    (product: CartItem) => {
+      dispatch(removeCartItem(product));
+      toast(`${product.name} removed from your cart`, { type: "info" });
     },
     [cart]
   );
 
   const handleIncrementCartItem = useCallback(
-    (cartItem: CartItem) => {
-      dispatch(incrementCartItem(cartItem));
-      const message = isExist(cart.cart, cartItem._id)
-        ? "increment"
-        : `${cartItem.name} added to your cart`;
+    (product: CartItem) => {
+      const message = isExist(cart.cart, product._id)
+        ? `${product.name}'s quantity incremented`
+        : `${product.name} added to your cart`;
+      dispatch(incrementCartItem(product));
       toast(message, { type: "success" });
     },
     [cart]
   );
 
   const handleDecrementCartItem = useCallback(
-    (cartItem: CartItem) => {
-      dispatch(decrementCartItem(cartItem));
+    (product: CartItem) => {
+      const message = isLastOne(cart.cart, product._id)
+        ? `${product.name} remove from your cart`
+        : `${product.name}'s quantity decremented`;
+      dispatch(decrementCartItem(product));
+      toast(message, { type: "success" });
     },
     [cart]
   );

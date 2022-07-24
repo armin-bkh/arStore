@@ -1,4 +1,5 @@
 import { isExist } from "helpers/utilities/isExist";
+import { isLastOne } from "helpers/utilities/isLastOne";
 import {
   DECREMENT_ITEM_CART,
   INCREMENT_ITEM_CART,
@@ -25,7 +26,7 @@ export type CartStateType = {
 
 export type CartActionType = {
   type: string;
-  payload: { cartItem: CartItem; cartData: CartStateType };
+  payload: { product: CartItem; cartData: CartStateType };
 };
 
 export const cartInitialState: CartStateType = {
@@ -39,35 +40,52 @@ export const cartReducer = (
 ): CartStateType => {
   switch (action.type) {
     case INCREMENT_ITEM_CART: {
-      if (isExist(state.cart, action.payload.cartItem._id)) {
+      if (isExist(state.cart, action.payload.product._id)) {
         const updatedCart = state.cart.map((item) =>
-          item._id === action.payload.cartItem._id
+          item._id === action.payload.product._id
             ? { ...item, qty: item.qty + 1 }
             : item
         );
 
         return {
           cart: updatedCart,
-          total:
-            state.total +
-            action.payload.cartItem.offPrice * action.payload.cartItem.qty,
+          total: state.total + action.payload.product.offPrice,
         };
       }
       return {
-        cart: [...state.cart, action.payload.cartItem],
+        cart: [...state.cart, action.payload.product],
         total:
           state.total +
-          action.payload.cartItem.offPrice * action.payload.cartItem.qty,
+          action.payload.product.offPrice * action.payload.product.qty,
       };
     }
     case DECREMENT_ITEM_CART: {
+      if (isLastOne(state.cart, action.payload.product._id)) {
+        const updatedCart = state.cart.filter(
+          (item) => item._id !== action.payload.product._id
+        );
+        return {
+          cart: updatedCart,
+          total: state.total - action.payload.product.offPrice,
+        };
+      }
+      const updatedCart = state.cart.map((item) =>
+        item._id === action.payload.product._id
+          ? { ...item, qty: item.qty - 1 }
+          : item
+      );
+
+      return {
+        cart: updatedCart,
+        total: state.total - action.payload.product.offPrice,
+      };
     }
     case REMOVE_FROM_CART: {
       const selectedItem = state.cart.find(
-        (item) => item._id === action.payload.cartItem._id
+        (item) => item._id === action.payload.product._id
       );
       const updatedCart = state.cart.filter(
-        (item) => item._id !== action.payload.cartItem._id
+        (item) => item._id !== action.payload.product._id
       );
 
       const total = selectedItem

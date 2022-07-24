@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import React, { useCallback, useState, useEffect, useRef } from "react";
 import { BsMinecartLoaded } from "react-icons/bs";
 import { useAuth } from "helpers/hooks/useAuth";
+import { useCart } from "helpers/hooks/useCart";
 
 const links = [
   { id: 1, title: "home", href: "/" },
@@ -20,6 +21,7 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const menuRef = useRef<HTMLElement>(null);
   const { user, handleLogout } = useAuth();
+  const { cart } = useCart();
 
   useEffect(() => {
     setIsOpen(isLandscape && false);
@@ -84,6 +86,9 @@ const Navbar = () => {
                       }`}
                     >
                       {link.title}
+                      {link.href === "/cart" && (
+                        <span>{cart.length > 0 ?? null}</span>
+                      )}
                     </a>
                   </Link>
                 </li>

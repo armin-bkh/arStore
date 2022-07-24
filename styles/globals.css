@@ -13,5 +13,11 @@
   input:-webkit-autofill {
     -webkit-box-shadow: 0 0 0 30px #fff inset !important;
   }
+  .flex-center {
+    @apply flex justify-center items-center;
+  }
+  .flex-between {
+    @apply flex justify-between items-center;
+  }
 }
 @tailwind utilities;

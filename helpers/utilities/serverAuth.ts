@@ -13,8 +13,11 @@ export function serverAuth(
 ) {
   const authData = getCookie(AUTH_COOKIE, { req, res });
   const cartData = getCookie(CART_COOKIE, { req, res });
-  const { auth } = store.getState();
-  if (cartData) {
+  const {
+    auth,
+    cart: { cart },
+  } = store.getState();
+  if (cart.length < 1 && cartData) {
     const parsedData = JSON.parse(cartData as string);
     store.dispatch(savedCartData(parsedData));
   }
