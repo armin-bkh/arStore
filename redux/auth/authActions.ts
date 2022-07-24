@@ -10,6 +10,7 @@ import {
   REGISTER_USER_FAILURE,
   REGISTER_USER_REQUEST,
   REGISTER_USER_SUCCESS,
+  RESET_ERROR,
   SAVED_USER_DATA,
 } from "./actionTypes";
 
@@ -49,4 +50,10 @@ export function savedUserData(payload: { auth: UserType }) {
 
 export function logoutUser() {
   return { type: LOGOUT_USER };
+}
+
+export function resetError() {
+  return {
+    type: RESET_ERROR,
+  };
 }

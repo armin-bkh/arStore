@@ -9,6 +9,7 @@ import {
   REGISTER_USER_FAILURE,
   REGISTER_USER_REQUEST,
   REGISTER_USER_SUCCESS,
+  RESET_ERROR,
   SAVED_USER_DATA,
 } from "./actionTypes";
 
@@ -46,7 +47,6 @@ export const userReducer = (
       return { loading: true, error: "", user: null };
     }
     case REGISTER_USER_SUCCESS: {
-      setCookie(AUTH_COOKIE, JSON.stringify(action.payload?.auth));
       return { loading: false, error: "", user: action.payload?.auth || null };
     }
     case REGISTER_USER_FAILURE: {
@@ -56,15 +56,19 @@ export const userReducer = (
       return { ...state, loading: true, error: "" };
     }
     case LOGIN_USER_SUCCESS: {
-      setCookie(AUTH_COOKIE, JSON.stringify(action.payload?.auth));
       return { loading: false, error: "", user: action.payload?.auth || null };
     }
     case LOGIN_USER_FAILURE: {
       return { loading: false, error: action.payload?.error || "", user: null };
     }
     case LOGOUT_USER: {
-      deleteCookie(AUTH_COOKIE);
       return { loading: false, error: "", user: null };
+    }
+    case RESET_ERROR: {
+      return {
+        ...state,
+        error: "",
+      };
     }
     default:
       return state;
